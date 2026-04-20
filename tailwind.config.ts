@@ -19,6 +19,16 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        panel: {
+          DEFAULT: "hsl(var(--panel))",
+          foreground: "hsl(var(--panel-foreground))",
+        },
+        brand: {
+          blue: "hsl(var(--brand-blue))",
+          yellow: "hsl(var(--brand-yellow))",
+          lime: "hsl(var(--brand-lime))",
+          orange: "hsl(var(--brand-orange))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -84,6 +94,13 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: "float 6s ease-in-out infinite",
+      },
+      boxShadow: {
+        panel: "var(--shadow-panel)",
+      },
+      backgroundImage: {
+        "panel-grid": "var(--panel-grid)",
       },
     },
   },
