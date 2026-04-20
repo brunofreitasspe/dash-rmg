@@ -168,45 +168,37 @@ All colors MUST be HSL.
     background: hsl(var(--panel)) !important;
   }
 
-  .balloon-label {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .network-tooltip {
+    border: 0 !important;
     border-radius: 10px;
-    padding: 0.4rem 0.75rem;
+    padding: 0 !important;
+    box-shadow: var(--shadow-panel);
+    opacity: 1 !important;
+    background: transparent !important;
+  }
+
+  .network-tooltip::before {
+    border-top-color: hsl(var(--brand-lime)) !important;
+  }
+
+  .network-tooltip .leaflet-tooltip-content {
+    margin: 0;
+    border-radius: 10px;
+    padding: 0.45rem 0.75rem;
     font-size: 0.75rem;
     font-weight: 700;
     line-height: 1;
     color: hsl(var(--primary-foreground));
     white-space: nowrap;
-    box-shadow: var(--shadow-panel);
-  }
-
-  .balloon-label::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: -8px;
-    transform: translateX(-50%);
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-  }
-
-  .balloon-label--hospital {
     background: hsl(var(--brand-lime));
   }
 
-  .balloon-label--hospital::after {
-    border-top: 9px solid hsl(var(--brand-lime));
+  .network-tooltip--upa::before {
+    border-top-color: hsl(var(--brand-orange)) !important;
   }
 
-  .balloon-label--upa {
+  .network-tooltip--upa .leaflet-tooltip-content {
     background: hsl(var(--brand-orange));
-  }
-
-  .balloon-label--upa::after {
-    border-top: 9px solid hsl(var(--brand-orange));
   }
 
   .map-popup {

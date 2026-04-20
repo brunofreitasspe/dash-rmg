@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import L, { type DivIconOptions, type Map as LeafletMap } from "leaflet";
+import L, { type Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CalendarDays, Clock3, Cross, MapPinned, Users } from "lucide-react";
 
@@ -110,38 +110,28 @@ export function HealthNetworkMap() {
       const variant = unit.tipo === "Hospital" ? "hospital" : "upa";
       const displayLng = unit.offsetLng ? unit.lng + unit.offsetLng : unit.lng;
 
-      const buildIcon = (anchorX: number, anchorY: number) =>
-        L.divIcon({
-          html: `<div class="balloon-label balloon-label--${variant}">${unit.nome}</div>`,
-          className: "",
-          iconAnchor: [anchorX, anchorY],
-          popupAnchor: [0, -anchorY],
-        } as DivIconOptions);
-
-      const marker = L.marker([unit.lat, displayLng], {
-        icon: buildIcon(0, 32),
+      const pointMarker = L.circleMarker([unit.lat, unit.lng], {
+        radius: 6,
+        color: unit.tipo === "Hospital" ? "hsl(76 60% 53%)" : "hsl(15 90% 58%)",
+        fillColor: "hsl(0 0% 100%)",
+        fillOpacity: 1,
+        weight: 3,
       }).addTo(map);
 
-      marker.on("add", () => {
-        const element = marker.getElement();
-        const bubble = element?.querySelector(".balloon-label") as HTMLDivElement | null;
+      const labelMarker = L.marker([unit.lat, displayLng], {
+        opacity: 0,
+        interactive: true,
+        keyboard: false,
+      }).addTo(map);
 
-        if (!bubble) return;
-
-        const width = bubble.offsetWidth;
-        const height = bubble.offsetHeight;
-        marker.setIcon(buildIcon(width / 2, height + 9));
+      labelMarker.bindTooltip(unit.nome, {
+        permanent: true,
+        direction: "top",
+        offset: [0, -10],
+        className: `network-tooltip network-tooltip--${variant}`,
       });
 
       if (unit.offsetLng && svgElement) {
-        L.circleMarker([unit.lat, unit.lng], {
-          radius: 5,
-          color: unit.tipo === "Hospital" ? "hsl(76 60% 53%)" : "hsl(15 90% 58%)",
-          fillColor: "hsl(0 0% 100%)",
-          fillOpacity: 1,
-          weight: 2.5,
-        }).addTo(map);
-
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute("stroke", unit.tipo === "Hospital" ? "hsl(76 60% 53%)" : "hsl(15 90% 58%)");
         line.setAttribute("stroke-width", "1.5");
@@ -151,15 +141,16 @@ export function HealthNetworkMap() {
         connectors.push({ lat: unit.lat, lng: unit.lng, offsetLng: unit.offsetLng, line });
       }
 
-      marker.bindPopup(
+      const popupHtml =
         `<div class="map-popup">
           <span class="map-popup__badge map-popup__badge--${variant}">${unit.tipo}</span>
           <div class="map-popup__title">${unit.nome}</div>
           <div class="map-popup__row">Atendimentos/mês <strong>${unit.atend}</strong></div>
           <div class="map-popup__row">Rede Mário Gatti · Campinas/SP</div>
-        </div>`,
-        { maxWidth: 260 },
-      );
+        </div>`;
+
+      pointMarker.bindPopup(popupHtml, { maxWidth: 260 });
+      labelMarker.bindPopup(popupHtml, { maxWidth: 260 });
     });
 
     map.on("move zoom viewreset", updateConnectors);
