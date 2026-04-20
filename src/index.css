@@ -14,8 +14,8 @@ All colors MUST be HSL.
     --panel-foreground: 222 25% 16%;
     --brand-blue: 200 65% 50%;
     --brand-yellow: 47 91% 49%;
-    --brand-lime: 76 60% 53%;
-    --brand-orange: 15 90% 58%;
+    --brand-lime: 122 47% 42%;
+    --brand-orange: 17 80% 54%;
     --shadow-panel: 0 1px 4px hsl(222 25% 16% / 0.08), 0 12px 30px hsl(222 25% 16% / 0.06);
     --panel-grid: repeating-linear-gradient(90deg, transparent, transparent 40px, hsl(0 0% 100% / 0.06) 40px, hsl(0 0% 100% / 0.06) 41px);
 
