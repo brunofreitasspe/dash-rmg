@@ -194,10 +194,16 @@ All colors MUST be HSL.
     font-weight: 700;
     line-height: 1;
     white-space: nowrap;
+    background: hsl(var(--brand-lime));
+    border-radius: 10px;
   }
 
   .leaflet-tooltip.network-tooltip--upa {
     background: hsl(var(--brand-orange)) !important;
+  }
+
+  .leaflet-tooltip.network-tooltip--upa .leaflet-tooltip-content {
+    background: hsl(var(--brand-orange));
   }
 
   .leaflet-tooltip.network-tooltip--upa::before {

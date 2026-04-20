@@ -112,7 +112,7 @@ export function HealthNetworkMap() {
 
       const pointMarker = L.circleMarker([unit.lat, unit.lng], {
         radius: 6,
-        color: unit.tipo === "Hospital" ? "hsl(76 60% 53%)" : "hsl(15 90% 58%)",
+        color: unit.tipo === "Hospital" ? "hsl(122 47% 42%)" : "hsl(17 80% 54%)",
         fillColor: "hsl(0 0% 100%)",
         fillOpacity: 1,
         weight: 3,
@@ -134,7 +134,7 @@ export function HealthNetworkMap() {
 
       if (unit.offsetLng && svgElement) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("stroke", unit.tipo === "Hospital" ? "hsl(76 60% 53%)" : "hsl(15 90% 58%)");
+        line.setAttribute("stroke", unit.tipo === "Hospital" ? "hsl(122 47% 42%)" : "hsl(17 80% 54%)");
         line.setAttribute("stroke-width", "1.5");
         line.setAttribute("stroke-dasharray", "4 3");
         line.setAttribute("opacity", "0.75");
