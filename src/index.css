@@ -209,6 +209,42 @@ All colors MUST be HSL.
     border-top: 9px solid hsl(var(--brand-orange));
   }
 
+  .map-popup {
+    min-width: 180px;
+    padding: 0.9rem;
+    background: hsl(var(--panel));
+    color: hsl(var(--panel-foreground));
+  }
+
+  .map-popup__badge {
+    display: inline-flex;
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: hsl(var(--primary-foreground));
+  }
+
+  .map-popup__badge--hospital {
+    background: hsl(var(--brand-lime));
+  }
+
+  .map-popup__badge--upa {
+    background: hsl(var(--brand-orange));
+  }
+
+  .map-popup__title {
+    margin-top: 0.55rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .map-popup__row {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    color: hsl(var(--muted-foreground));
+  }
+
   .leaflet-div-icon {
     background: transparent;
     border: 0;
