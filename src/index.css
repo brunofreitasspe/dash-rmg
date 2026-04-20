@@ -168,37 +168,40 @@ All colors MUST be HSL.
     background: hsl(var(--panel)) !important;
   }
 
-  .network-tooltip {
+  .network-label-anchor {
+    background: transparent !important;
+    border: 0 !important;
+  }
+
+  .leaflet-tooltip.network-tooltip {
     border: 0 !important;
     border-radius: 10px;
     padding: 0 !important;
-    box-shadow: var(--shadow-panel);
     opacity: 1 !important;
-    background: transparent !important;
+    box-shadow: var(--shadow-panel);
+    background: hsl(var(--brand-lime)) !important;
+    color: hsl(var(--primary-foreground)) !important;
   }
 
-  .network-tooltip::before {
+  .leaflet-tooltip.network-tooltip::before {
     border-top-color: hsl(var(--brand-lime)) !important;
   }
 
-  .network-tooltip .leaflet-tooltip-content {
+  .leaflet-tooltip.network-tooltip .leaflet-tooltip-content {
     margin: 0;
-    border-radius: 10px;
     padding: 0.45rem 0.75rem;
     font-size: 0.75rem;
     font-weight: 700;
     line-height: 1;
-    color: hsl(var(--primary-foreground));
     white-space: nowrap;
-    background: hsl(var(--brand-lime));
   }
 
-  .network-tooltip--upa::before {
+  .leaflet-tooltip.network-tooltip--upa {
+    background: hsl(var(--brand-orange)) !important;
+  }
+
+  .leaflet-tooltip.network-tooltip--upa::before {
     border-top-color: hsl(var(--brand-orange)) !important;
-  }
-
-  .network-tooltip--upa .leaflet-tooltip-content {
-    background: hsl(var(--brand-orange));
   }
 
   .map-popup {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import L, { type Map as LeafletMap } from "leaflet";
+import L, { divIcon, type Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CalendarDays, Clock3, Cross, MapPinned, Users } from "lucide-react";
 
@@ -119,7 +119,7 @@ export function HealthNetworkMap() {
       }).addTo(map);
 
       const labelMarker = L.marker([unit.lat, displayLng], {
-        opacity: 0,
+        icon: divIcon({ className: "network-label-anchor", html: "", iconSize: [1, 1], iconAnchor: [0, 0] }),
         interactive: true,
         keyboard: false,
       }).addTo(map);
@@ -128,6 +128,7 @@ export function HealthNetworkMap() {
         permanent: true,
         direction: "top",
         offset: [0, -10],
+        opacity: 1,
         className: `network-tooltip network-tooltip--${variant}`,
       });
 
