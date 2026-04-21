@@ -50,6 +50,7 @@ export function HealthNetworkMap() {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const [now, setNow] = useState(() => formatClock(new Date()));
+  const [selected, setSelected] = useState<HealthUnit | null>(null);
 
   const stats = useMemo(() => {
     const hospitals = units.filter((unit) => unit.tipo === "Hospital");
@@ -154,11 +155,18 @@ export function HealthNetworkMap() {
           <span class="map-popup__badge map-popup__badge--${variant}">${unit.tipo}</span>
           <div class="map-popup__title">${unit.nome}</div>
           <div class="map-popup__row">Atendimentos/mês <strong>${unit.atend}</strong></div>
+          <div class="map-popup__row">Adulto <strong>${unit.adulto.toLocaleString("pt-BR")}</strong></div>
+          <div class="map-popup__row">Pediátrico <strong>${unit.pediatrico.toLocaleString("pt-BR")}</strong></div>
+          <div class="map-popup__row">Retaguarda <strong>${unit.retaguarda.toLocaleString("pt-BR")}</strong></div>
+          <div class="map-popup__row">Evasões/Desistências <strong>${unit.evasoes.toLocaleString("pt-BR")}</strong></div>
           <div class="map-popup__row">Rede Mário Gatti · Campinas/SP</div>
         </div>`;
 
       pointMarker.bindPopup(popupHtml, { maxWidth: 260 });
       labelMarker.bindPopup(popupHtml, { maxWidth: 260 });
+
+      pointMarker.on("click", () => setSelected(unit));
+      labelMarker.on("click", () => setSelected(unit));
 
       const tooltipEl = labelMarker.getTooltip()?.getElement();
       if (tooltipEl) {
@@ -166,6 +174,7 @@ export function HealthNetworkMap() {
         tooltipEl.addEventListener("click", (e) => {
           e.stopPropagation();
           labelMarker.openPopup();
+          setSelected(unit);
         });
       }
     });
