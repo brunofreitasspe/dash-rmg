@@ -162,6 +162,7 @@ export function HealthNetworkMap() {
           labelMarker.openPopup();
         });
       }
+    });
 
     map.on("move zoom viewreset", updateConnectors);
     map.whenReady(() => window.setTimeout(updateConnectors, 100));
