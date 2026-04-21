@@ -53,14 +53,6 @@ export function HealthNetworkMap() {
   }, []);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setNow(formatClock(new Date()));
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
     if (!mapElementRef.current || mapRef.current) return;
 
     const map = L.map(mapElementRef.current, {
