@@ -179,12 +179,9 @@ All colors MUST be HSL.
     padding: 0 !important;
     opacity: 1 !important;
     box-shadow: var(--shadow-panel);
-    background: hsl(var(--brand-lime)) !important;
     color: hsl(var(--primary-foreground)) !important;
-  }
-
-  .leaflet-tooltip.network-tooltip::before {
-    border-top-color: hsl(var(--brand-lime)) !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
   }
 
   .leaflet-tooltip.network-tooltip .leaflet-tooltip-content {
@@ -194,16 +191,21 @@ All colors MUST be HSL.
     font-weight: 700;
     line-height: 1;
     white-space: nowrap;
-    background: hsl(var(--brand-lime));
     border-radius: 10px;
   }
 
-  .leaflet-tooltip.network-tooltip--upa {
-    background: hsl(var(--brand-orange)) !important;
+  .leaflet-tooltip.network-tooltip--hospital,
+  .leaflet-tooltip.network-tooltip--hospital .leaflet-tooltip-content {
+    background: hsl(var(--brand-lime)) !important;
   }
 
+  .leaflet-tooltip.network-tooltip--hospital::before {
+    border-top-color: hsl(var(--brand-lime)) !important;
+  }
+
+  .leaflet-tooltip.network-tooltip--upa,
   .leaflet-tooltip.network-tooltip--upa .leaflet-tooltip-content {
-    background: hsl(var(--brand-orange));
+    background: hsl(var(--brand-orange)) !important;
   }
 
   .leaflet-tooltip.network-tooltip--upa::before {
