@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L, { divIcon, type Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { CalendarDays, Clock3, Cross, MapPinned, Users } from "lucide-react";
+import { CalendarDays, Clock3, Cross, Info, MapPinned, Users } from "lucide-react";
 
 import logo from "@/assets/logo.png";
 import { Badge } from "@/components/ui/badge";
@@ -15,17 +15,21 @@ type HealthUnit = {
   nome: string;
   tipo: UnitType;
   atend: string;
+  adulto: number;
+  pediatrico: number;
+  retaguarda: number;
+  evasoes: number;
   offsetLng?: number;
 };
 
 const units: HealthUnit[] = [
-  { lat: -22.9155, lng: -47.068, nome: "Hospital Mário Gatti", tipo: "Hospital", atend: "18.000", offsetLng: -0.022 },
-  { lat: -22.9155, lng: -47.067, nome: "Mário Gattinho", tipo: "Hospital", atend: "9.500", offsetLng: 0.02 },
-  { lat: -22.961, lng: -47.134, nome: "Hosp. Edivaldo Orsi", tipo: "Hospital", atend: "12.000" },
-  { lat: -22.877, lng: -47.11, nome: "UPA Anchieta", tipo: "UPA", atend: "11.000" },
-  { lat: -22.949, lng: -47.19, nome: "UPA Campo Grande", tipo: "UPA", atend: "15.000" },
-  { lat: -22.952, lng: -47.091, nome: "UPA São José", tipo: "UPA", atend: "13.000" },
-  { lat: -22.925, lng: -47.027, nome: "UPA Carlos Lourenço", tipo: "UPA", atend: "12.500" },
+  { lat: -22.9155, lng: -47.068, nome: "Hospital Mário Gatti", tipo: "Hospital", atend: "18.000", adulto: 13200, pediatrico: 4800, retaguarda: 42, evasoes: 180, offsetLng: -0.022 },
+  { lat: -22.9155, lng: -47.067, nome: "Mário Gattinho", tipo: "Hospital", atend: "9.500", adulto: 0, pediatrico: 9500, retaguarda: 18, evasoes: 95, offsetLng: 0.02 },
+  { lat: -22.961, lng: -47.134, nome: "Hosp. Edivaldo Orsi", tipo: "Hospital", atend: "12.000", adulto: 9000, pediatrico: 3000, retaguarda: 28, evasoes: 120 },
+  { lat: -22.877, lng: -47.11, nome: "UPA Anchieta", tipo: "UPA", atend: "11.000", adulto: 7700, pediatrico: 3300, retaguarda: 12, evasoes: 220 },
+  { lat: -22.949, lng: -47.19, nome: "UPA Campo Grande", tipo: "UPA", atend: "15.000", adulto: 10500, pediatrico: 4500, retaguarda: 16, evasoes: 310 },
+  { lat: -22.952, lng: -47.091, nome: "UPA São José", tipo: "UPA", atend: "13.000", adulto: 9100, pediatrico: 3900, retaguarda: 14, evasoes: 260 },
+  { lat: -22.925, lng: -47.027, nome: "UPA Carlos Lourenço", tipo: "UPA", atend: "12.500", adulto: 8800, pediatrico: 3700, retaguarda: 13, evasoes: 240 },
 ];
 
 const formatClock = (value: Date) => ({
