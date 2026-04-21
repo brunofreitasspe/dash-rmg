@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L, { divIcon, type Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { CalendarDays, Clock3, Cross, MapPinned, Users } from "lucide-react";
+import { CalendarDays, Clock3, Cross, Info, MapPinned, Users } from "lucide-react";
 
 import logo from "@/assets/logo.png";
 import { Badge } from "@/components/ui/badge";
@@ -15,17 +15,21 @@ type HealthUnit = {
   nome: string;
   tipo: UnitType;
   atend: string;
+  adulto: number;
+  pediatrico: number;
+  retaguarda: number;
+  evasoes: number;
   offsetLng?: number;
 };
 
 const units: HealthUnit[] = [
-  { lat: -22.9155, lng: -47.068, nome: "Hospital Mário Gatti", tipo: "Hospital", atend: "18.000", offsetLng: -0.022 },
-  { lat: -22.9155, lng: -47.067, nome: "Mário Gattinho", tipo: "Hospital", atend: "9.500", offsetLng: 0.02 },
-  { lat: -22.961, lng: -47.134, nome: "Hosp. Edivaldo Orsi", tipo: "Hospital", atend: "12.000" },
-  { lat: -22.877, lng: -47.11, nome: "UPA Anchieta", tipo: "UPA", atend: "11.000" },
-  { lat: -22.949, lng: -47.19, nome: "UPA Campo Grande", tipo: "UPA", atend: "15.000" },
-  { lat: -22.952, lng: -47.091, nome: "UPA São José", tipo: "UPA", atend: "13.000" },
-  { lat: -22.925, lng: -47.027, nome: "UPA Carlos Lourenço", tipo: "UPA", atend: "12.500" },
+  { lat: -22.9155, lng: -47.068, nome: "Hospital Mário Gatti", tipo: "Hospital", atend: "18.000", adulto: 13200, pediatrico: 4800, retaguarda: 42, evasoes: 180, offsetLng: -0.022 },
+  { lat: -22.9155, lng: -47.067, nome: "Mário Gattinho", tipo: "Hospital", atend: "9.500", adulto: 0, pediatrico: 9500, retaguarda: 18, evasoes: 95, offsetLng: 0.02 },
+  { lat: -22.961, lng: -47.134, nome: "Hosp. Edivaldo Orsi", tipo: "Hospital", atend: "12.000", adulto: 9000, pediatrico: 3000, retaguarda: 28, evasoes: 120 },
+  { lat: -22.877, lng: -47.11, nome: "UPA Anchieta", tipo: "UPA", atend: "11.000", adulto: 7700, pediatrico: 3300, retaguarda: 12, evasoes: 220 },
+  { lat: -22.949, lng: -47.19, nome: "UPA Campo Grande", tipo: "UPA", atend: "15.000", adulto: 10500, pediatrico: 4500, retaguarda: 16, evasoes: 310 },
+  { lat: -22.952, lng: -47.091, nome: "UPA São José", tipo: "UPA", atend: "13.000", adulto: 9100, pediatrico: 3900, retaguarda: 14, evasoes: 260 },
+  { lat: -22.925, lng: -47.027, nome: "UPA Carlos Lourenço", tipo: "UPA", atend: "12.500", adulto: 8800, pediatrico: 3700, retaguarda: 13, evasoes: 240 },
 ];
 
 const formatClock = (value: Date) => ({
@@ -46,6 +50,7 @@ export function HealthNetworkMap() {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const [now, setNow] = useState(() => formatClock(new Date()));
+  const [selected, setSelected] = useState<HealthUnit | null>(null);
 
   const stats = useMemo(() => {
     const hospitals = units.filter((unit) => unit.tipo === "Hospital");
@@ -150,11 +155,18 @@ export function HealthNetworkMap() {
           <span class="map-popup__badge map-popup__badge--${variant}">${unit.tipo}</span>
           <div class="map-popup__title">${unit.nome}</div>
           <div class="map-popup__row">Atendimentos/mês <strong>${unit.atend}</strong></div>
+          <div class="map-popup__row">Adulto <strong>${unit.adulto.toLocaleString("pt-BR")}</strong></div>
+          <div class="map-popup__row">Pediátrico <strong>${unit.pediatrico.toLocaleString("pt-BR")}</strong></div>
+          <div class="map-popup__row">Retaguarda <strong>${unit.retaguarda.toLocaleString("pt-BR")}</strong></div>
+          <div class="map-popup__row">Evasões/Desistências <strong>${unit.evasoes.toLocaleString("pt-BR")}</strong></div>
           <div class="map-popup__row">Rede Mário Gatti · Campinas/SP</div>
         </div>`;
 
       pointMarker.bindPopup(popupHtml, { maxWidth: 260 });
       labelMarker.bindPopup(popupHtml, { maxWidth: 260 });
+
+      pointMarker.on("click", () => setSelected(unit));
+      labelMarker.on("click", () => setSelected(unit));
 
       const tooltipEl = labelMarker.getTooltip()?.getElement();
       if (tooltipEl) {
@@ -162,6 +174,7 @@ export function HealthNetworkMap() {
         tooltipEl.addEventListener("click", (e) => {
           e.stopPropagation();
           labelMarker.openPopup();
+          setSelected(unit);
         });
       }
     });
@@ -285,6 +298,67 @@ export function HealthNetworkMap() {
                     <CalendarDays className="h-3.5 w-3.5" /> Atualização contínua pela hora local do painel
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-md border-border bg-panel shadow-panel sm:col-span-2 xl:col-span-1">
+              <CardHeader className="border-b border-border bg-secondary px-4 py-3">
+                <CardTitle className="flex items-center gap-2 text-sm font-bold">
+                  <Info className="h-4 w-4 text-primary" /> Detalhes da unidade
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 pb-4 pt-4">
+                {selected ? (
+                  <div className="space-y-3">
+                    <div className="rounded-md border border-border bg-secondary p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm font-bold text-foreground">{selected.nome}</div>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                            selected.tipo === "Hospital"
+                              ? "bg-brand-lime text-panel"
+                              : "bg-brand-orange text-primary-foreground"
+                          }`}
+                        >
+                          {selected.tipo}
+                        </span>
+                      </div>
+                      <div className="mt-2 text-[11px] uppercase tracking-wide text-muted-foreground">Total / mês</div>
+                      <div className="text-2xl font-extrabold text-primary">{selected.atend}</div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Atend. Adulto</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.adulto.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Atend. Pediátrico</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.pediatrico.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Pac. em retaguarda</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.retaguarda.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Evasões/Desist.</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.evasoes.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-md border border-dashed border-border bg-secondary p-4 text-xs text-muted-foreground">
+                    Clique em uma unidade no mapa para visualizar os detalhes assistenciais.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
