@@ -32,24 +32,9 @@ const units: HealthUnit[] = [
   { lat: -22.925, lng: -47.027, nome: "UPA Carlos Lourenço", tipo: "UPA", atend: "12.500", adulto: 8800, pediatrico: 3700, retaguarda: 13, evasoes: 240 },
 ];
 
-const formatClock = (value: Date) => ({
-  time: new Intl.DateTimeFormat("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).format(value),
-  date: new Intl.DateTimeFormat("pt-BR", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  }).format(value),
-});
-
 export function HealthNetworkMap() {
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
-  const [now, setNow] = useState(() => formatClock(new Date()));
   const [selected, setSelected] = useState<HealthUnit | null>(null);
 
   const stats = useMemo(() => {
