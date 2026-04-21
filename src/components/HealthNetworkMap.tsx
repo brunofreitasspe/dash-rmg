@@ -170,39 +170,10 @@ export function HealthNetworkMap() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="panel-surface border-x-0 border-t-0 rounded-none">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-4 px-4 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-7">
-          <div className="flex min-w-0 items-center gap-4 lg:gap-5">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-panel p-2 sm:h-20 sm:w-20">
-              <img src={logo} alt="Logo da Rede Mário Gatti" className="h-full w-full object-contain" />
-            </div>
-
-            <div className="min-w-0">
-              <h1 className="text-base font-bold text-foreground sm:text-lg lg:text-[1.05rem]">
-                Mapa Assistencial — Rede Mário Gatti
-              </h1>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                Unidades hospitalares e UPAs da rede em Campinas/SP
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 self-end lg:self-auto">
-            <div className="panel-surface relative overflow-hidden rounded-md px-4 py-3">
-              <div className="absolute inset-0 bg-panel-grid opacity-70" aria-hidden="true" />
-              <div className="relative flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
-                  <Clock3 className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-2xl font-extrabold leading-none text-primary">{now.time}</div>
-                  <div className="mt-1 text-[11px] capitalize text-muted-foreground">{now.date}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader
+        title="Mapa Assistencial — Rede Mário Gatti"
+        subtitle="Unidades hospitalares e UPAs da rede em Campinas/SP"
+      />
 
       <main className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-5 lg:px-7">
         <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
