@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Rede Mário Gatti — Design System
 
 ## Overview
@@ -188,3 +189,8 @@ See ICONOGRAPHY section below.
 | `ui_kits/dashboard/MapView.jsx` | Map page stub component |
 | `preview/` | Design system card previews (registered in asset review) |
 | `SKILL.md` | Agent skill definition |
+=======
+# Welcome to your Lovable project
+
+TODO: Document your project here
+>>>>>>> 98c44c0ced35763ead5019285f037c66ba179efc
