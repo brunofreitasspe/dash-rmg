@@ -129,6 +129,7 @@ export function HealthNetworkMap() {
         direction: "top",
         offset: [0, -10],
         opacity: 1,
+        interactive: true,
         className: `network-tooltip network-tooltip--${variant}`,
       });
 
@@ -152,6 +153,15 @@ export function HealthNetworkMap() {
 
       pointMarker.bindPopup(popupHtml, { maxWidth: 260 });
       labelMarker.bindPopup(popupHtml, { maxWidth: 260 });
+
+      const tooltipEl = labelMarker.getTooltip()?.getElement();
+      if (tooltipEl) {
+        tooltipEl.style.cursor = "pointer";
+        tooltipEl.addEventListener("click", (e) => {
+          e.stopPropagation();
+          labelMarker.openPopup();
+        });
+      }
     });
 
     map.on("move zoom viewreset", updateConnectors);
