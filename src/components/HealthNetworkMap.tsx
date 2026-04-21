@@ -300,6 +300,67 @@ export function HealthNetworkMap() {
                 </div>
               </CardContent>
             </Card>
+
+            <Card className="rounded-md border-border bg-panel shadow-panel sm:col-span-2 xl:col-span-1">
+              <CardHeader className="border-b border-border bg-secondary px-4 py-3">
+                <CardTitle className="flex items-center gap-2 text-sm font-bold">
+                  <Info className="h-4 w-4 text-primary" /> Detalhes da unidade
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 pb-4 pt-4">
+                {selected ? (
+                  <div className="space-y-3">
+                    <div className="rounded-md border border-border bg-secondary p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm font-bold text-foreground">{selected.nome}</div>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                            selected.tipo === "Hospital"
+                              ? "bg-brand-lime text-panel"
+                              : "bg-brand-orange text-primary-foreground"
+                          }`}
+                        >
+                          {selected.tipo}
+                        </span>
+                      </div>
+                      <div className="mt-2 text-[11px] uppercase tracking-wide text-muted-foreground">Total / mês</div>
+                      <div className="text-2xl font-extrabold text-primary">{selected.atend}</div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Atend. Adulto</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.adulto.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Atend. Pediátrico</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.pediatrico.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Pac. em retaguarda</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.retaguarda.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                      <div className="rounded-md border border-border bg-secondary p-3">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Evasões/Desist.</div>
+                        <div className="mt-1 text-lg font-extrabold text-foreground">
+                          {selected.evasoes.toLocaleString("pt-BR")}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-md border border-dashed border-border bg-secondary p-4 text-xs text-muted-foreground">
+                    Clique em uma unidade no mapa para visualizar os detalhes assistenciais.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </section>
       </main>
