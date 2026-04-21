@@ -124,7 +124,9 @@ export function HealthNetworkMap() {
         keyboard: false,
       }).addTo(map);
 
-      labelMarker.bindTooltip(unit.nome, {
+      const labelColor = unit.tipo === "Hospital" ? "hsl(var(--brand-lime))" : "hsl(var(--brand-orange))";
+
+      labelMarker.bindTooltip(`<span class="network-tooltip__label" style="background-color: ${labelColor}">${unit.nome}</span>`, {
         permanent: true,
         direction: "top",
         offset: [0, -10],
