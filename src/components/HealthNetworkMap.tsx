@@ -150,16 +150,18 @@ export function HealthNetworkMap() {
         connectors.push({ lat: unit.lat, lng: unit.lng, offsetLng: unit.offsetLng, line });
       }
 
+      const popupIcon = unit.tipo === "Hospital" ? "✚" : "◉";
       const popupHtml =
         `<div class="map-popup">
-          <span class="map-popup__badge map-popup__badge--${variant}">${unit.tipo}</span>
-          <div class="map-popup__title">${unit.nome}</div>
+          <div class="map-popup__head">
+            <span class="map-popup__icon map-popup__icon--${variant}">${popupIcon}</span>
+            <div>
+              <span class="map-popup__badge map-popup__badge--${variant}">${unit.tipo}</span>
+              <div class="map-popup__title">${unit.nome}</div>
+            </div>
+          </div>
           <div class="map-popup__row">Atendimentos/mês <strong>${unit.atend}</strong></div>
-          <div class="map-popup__row">Adulto <strong>${unit.adulto.toLocaleString("pt-BR")}</strong></div>
-          <div class="map-popup__row">Pediátrico <strong>${unit.pediatrico.toLocaleString("pt-BR")}</strong></div>
-          <div class="map-popup__row">Retaguarda <strong>${unit.retaguarda.toLocaleString("pt-BR")}</strong></div>
-          <div class="map-popup__row">Evasões/Desistências <strong>${unit.evasoes.toLocaleString("pt-BR")}</strong></div>
-          <div class="map-popup__row">Rede Mário Gatti · Campinas/SP</div>
+          <div class="map-popup__row map-popup__row--muted">Rede Mário Gatti · Campinas/SP</div>
         </div>`;
 
       pointMarker.bindPopup(popupHtml, { maxWidth: 260 });
