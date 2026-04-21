@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L, { divIcon, type Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { CalendarDays, Clock3, Cross, Info, MapPinned, Users } from "lucide-react";
+import { CalendarDays, Cross, Info, MapPinned, Users } from "lucide-react";
 
-import logo from "@/assets/logo.png";
+import { AppHeader } from "@/components/AppHeader";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
