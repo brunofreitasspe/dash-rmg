@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Hospitalar — Complexo Hospitalar Prefeito Edivaldo Orsi</title>
+  <template id="__bundler_thumbnail" data-bg-color="#f0f2f5">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <!-- Header bar -->
+      <rect x="0" y="0" width="1200" height="72" fill="#ffffff" rx="0"/>
+      <rect x="28" y="14" width="44" height="44" fill="#e2e5ea" rx="6"/>
+      <rect x="84" y="20" width="260" height="12" fill="#1e2433" rx="3"/>
+      <rect x="84" y="40" width="180" height="8" fill="#9ca3af" rx="3"/>
+      <!-- KPI row -->
+      <rect x="28" y="96" width="210" height="90" fill="#fff" rx="10"/>
+      <rect x="28" y="183" width="210" height="3" fill="#2B97D1" rx="2"/>
+      <rect x="258" y="96" width="210" height="90" fill="#fff" rx="10"/>
+      <rect x="258" y="183" width="210" height="3" fill="#E85A2A" rx="2"/>
+      <rect x="488" y="96" width="210" height="90" fill="#fff" rx="10"/>
+      <rect x="488" y="183" width="210" height="3" fill="#F4C400" rx="2"/>
+      <rect x="718" y="96" width="210" height="90" fill="#fff" rx="10"/>
+      <rect x="718" y="183" width="210" height="3" fill="#0d9488" rx="2"/>
+      <rect x="948" y="96" width="224" height="90" fill="#fff" rx="10"/>
+      <rect x="948" y="183" width="224" height="3" fill="#8CC63F" rx="2"/>
+      <!-- Internação section -->
+      <rect x="28" y="210" width="800" height="260" fill="#fff" rx="10"/>
+      <rect x="28" y="210" width="800" height="36" fill="#f7f8fa" rx="10"/>
+      <rect x="848" y="210" width="324" height="260" fill="#fff" rx="10"/>
+      <!-- Bars -->
+      <rect x="48" y="272" width="300" height="14" fill="#2B97D1" rx="3"/>
+      <rect x="48" y="296" width="220" height="14" fill="#E85A2A" rx="3"/>
+      <rect x="48" y="320" width="180" height="14" fill="#8CC63F" rx="3"/>
+      <rect x="48" y="344" width="140" height="14" fill="#F4C400" rx="3"/>
+      <rect x="48" y="368" width="100" height="14" fill="#0d9488" rx="3"/>
+      <!-- Big number -->
+      <text x="1010" y="370" font-size="72" font-weight="900" fill="#2B97D1" text-anchor="middle" font-family="system-ui">671</text>
+      <text x="1010" y="400" font-size="14" fill="#6b7280" text-anchor="middle" font-family="system-ui">dias internado</text>
+    </svg>
+  </template>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f0f2f5; --surface:#fff; --surface2:#f7f8fa; --border:#e2e5ea;
+      --text:#1e2433; --muted:#6b7280;
+      --blue:#2B97D1; --yellow:#F4C400; --lime:#8CC63F; --red:#E85A2A;
+      --teal:#0d9488; --purple:#7c3aed; --orange:#f97316;
+      --radius:10px; --shadow:0 1px 4px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.04);
+    }
+    body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; font-size:14px; }
+
+    header { background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; display:flex; align-items:stretch; justify-content:space-between; box-shadow:var(--shadow); }
+    .h-logo { display:flex; align-items:center; padding:10px 20px 10px 0; border-right:1px solid var(--border); }
+    .h-logo img { height:48px; }
+    .h-title { display:flex; flex-direction:column; justify-content:center; padding-left:20px; }
+    .h-title strong { font-size:15px; font-weight:700; }
+    .h-title span { font-size:11px; color:var(--muted); margin-top:1px; }
+    .h-right { display:flex; align-items:center; gap:20px; padding:10px 0; }
+    #clock { font-size:22px; font-weight:700; color:var(--blue); letter-spacing:1px; line-height:1; }
+    #dateLabel { font-size:11px; color:var(--muted); margin-top:3px; text-align:right; }
+
+    main { padding:22px 28px; display:flex; flex-direction:column; gap:22px; }
+    .row2  { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .row3  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+    .row4  { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .row5  { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+    .row32 { display:grid; grid-template-columns:2fr 1fr; gap:18px; }
+    @media(max-width:960px){ .row2,.row3,.row4,.row5,.row32{ grid-template-columns:1fr; } }
+
+    .section-title {
+      font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px;
+      color:var(--muted); display:flex; align-items:center; gap:8px; margin-bottom:12px;
+    }
+    .section-title::before { content:''; display:block; width:3px; height:14px; border-radius:2px; background:var(--accent,var(--blue)); }
+
+    /* ── Módulo header ── */
+    .mod-header {
+      display:flex; align-items:center; gap:12px; padding:10px 18px;
+      background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+      box-shadow:var(--shadow); margin-bottom:14px;
+    }
+    .mod-header-bar { width:4px; height:28px; border-radius:3px; flex-shrink:0; }
+    .mod-header-title { font-size:14px; font-weight:700; }
+    .mod-header-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+    /* ── KPI ── */
+    .kpi { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+    .kpi::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--accent,var(--blue)); border-radius:0 0 var(--radius) var(--radius); }
+    .kpi-icon { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:13px; margin-bottom:7px; background:color-mix(in srgb,var(--accent,var(--blue)) 12%,transparent); }
+    .kpi-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+    .kpi-value { font-size:28px; font-weight:800; line-height:1.05; margin-top:2px; }
+    .kpi-sub   { font-size:10px; color:var(--muted); margin-top:3px; }
+
+    /* ── Card ── */
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+    .card-header { padding:10px 16px; border-bottom:1px solid var(--border); background:var(--surface2); }
+    .card-body   { padding:16px; }
+    .chart-wrap    { position:relative; height:190px; }
+    .chart-wrap-sm { position:relative; height:150px; }
+
+    /* ── Unit panel ── */
+    .unit-panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+    .unit-panel-header { padding:10px 16px; border-bottom:2px solid var(--accent,var(--teal)); background:color-mix(in srgb,var(--accent,var(--teal)) 6%,var(--surface2)); }
+    .unit-panel-title { font-size:13px; font-weight:700; }
+    .unit-panel-sub   { font-size:11px; color:var(--muted); margin-top:2px; }
+    .unit-panel-body  { padding:14px; display:flex; flex-direction:column; gap:14px; }
+
+    /* ── Horizontal bars ── */
+    .hbar-list { display:flex; flex-direction:column; gap:8px; }
+    .hbar-row  { display:flex; align-items:center; gap:8px; }
+    .hbar-label { font-size:11px; color:var(--muted); width:150px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .hbar-label-sm { font-size:11px; color:var(--muted); width:80px; flex-shrink:0; }
+    .hbar-track { flex:1; background:var(--surface2); border-radius:4px; height:18px; overflow:hidden; border:1px solid var(--border); }
+    .hbar-fill  { height:100%; border-radius:3px; display:flex; align-items:center; padding-left:6px; font-size:10px; font-weight:700; color:#fff; transition:width .6s ease; min-width:20px; }
+    .hbar-val   { font-size:11px; font-weight:700; width:28px; text-align:right; flex-shrink:0; color:var(--text); }
+
+    /* ── Stat rows ── */
+    .stat-list { display:flex; flex-direction:column; gap:7px; }
+    .stat-row  { display:flex; align-items:center; justify-content:space-between; padding:8px 11px; background:var(--surface2); border-radius:7px; border:1px solid var(--border); }
+    .stat-label { font-size:12px; font-weight:500; }
+    .stat-right { display:flex; align-items:center; gap:10px; }
+    .stat-total { font-size:16px; font-weight:800; }
+    .stat-sub   { font-size:10px; color:var(--muted); }
+
+    /* ── Situação badges ── */
+    .sit-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:99px; font-size:10px; font-weight:700; border:1px solid transparent; }
+    .sit-dot   { width:6px; height:6px; border-radius:50%; }
+    .s-AGND{background:#eff6ff;color:#1e40af;border-color:#bfdbfe} .s-AGND .sit-dot{background:#3b82f6}
+    .s-CHAM{background:#fefce8;color:#854d0e;border-color:#fde68a} .s-CHAM .sit-dot{background:#f59e0b}
+    .s-PREP{background:#fff7ed;color:#9a3412;border-color:#fed7aa} .s-PREP .sit-dot{background:#f97316}
+    .s-TRAN{background:#fdf4ff;color:#6b21a8;border-color:#e9d5ff} .s-TRAN .sit-dot{background:#a855f7}
+    .s-RZDA{background:#f0fdf4;color:#166534;border-color:#bbf7d0} .s-RZDA .sit-dot{background:#22c55e}
+    .s-CANC{background:#fef2f2;color:#991b1b;border-color:#fecaca} .s-CANC .sit-dot{background:#ef4444}
+
+    /* ── Table ── */
+    .dash-table { width:100%; border-collapse:collapse; }
+    .dash-table th { background:var(--surface2); padding:7px 11px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); border-bottom:2px solid var(--border); }
+    .dash-table td { padding:8px 11px; font-size:12px; border-bottom:1px solid var(--border); }
+    .dash-table tr:last-child td { border-bottom:none; }
+    .dash-table tr:hover td { background:#f0f7fd; }
+    .num-cell    { font-weight:700; text-align:right; }
+    .detail-cell { font-size:10px; color:var(--muted); }
+
+    /* ── Big stat card ── */
+    .big-stat        { text-align:center; padding:20px 16px; }
+    .big-stat-num    { font-size:58px; font-weight:900; line-height:1; color:var(--blue); }
+    .big-stat-unit   { font-size:13px; color:var(--muted); margin-top:3px; }
+    .big-stat-detail { margin-top:8px; font-size:11px; color:var(--muted); background:var(--surface2); border-radius:7px; padding:7px 12px; border:1px solid var(--border); }
+
+    /* ── Divider ── */
+    .divider { border:none; border-top:1px solid var(--border); margin:4px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo"><img src="../../assets/logo.png" alt="Rede Mário Gatti" /></div>
+  <div class="h-title">
+    <strong>Painel Hospitalar — Complexo Hospitalar Prefeito Edivaldo Orsi</strong>
+    <span>Internação · Ambulatório · Centro Cirúrgico · Dados exportados do AGHU</span>
+  </div>
+  <div class="h-right">
+    <div>
+      <div id="clock">--:--:--</div>
+      <div id="dateLabel"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ KPI GLOBAL ══ -->
+  <div class="row5">
+    <div class="kpi" style="--accent:var(--blue)">
+      <div class="kpi-icon">🛏️</div>
+      <div class="kpi-label">Internados</div>
+      <div class="kpi-value" id="kpiInt">205</div>
+      <div class="kpi-sub" id="kpiIntSexo">112 masc · 93 fem</div>
+    </div>
+    <div class="kpi" style="--accent:var(--red)">
+      <div class="kpi-icon">⏱️</div>
+      <div class="kpi-label">Maior tempo internado</div>
+      <div class="kpi-value" id="kpiMaior">671</div>
+      <div class="kpi-sub">dias · desde <span id="kpiMaiorData">17/06/2024</span></div>
+    </div>
+    <div class="kpi" style="--accent:var(--yellow)">
+      <div class="kpi-icon">📅</div>
+      <div class="kpi-label">Amb. agendados</div>
+      <div class="kpi-value" id="kpiAmbAg">481</div>
+      <div class="kpi-sub" id="kpiAmbFalt">— faltaram</div>
+    </div>
+    <div class="kpi" style="--accent:var(--teal)">
+      <div class="kpi-icon">🔪</div>
+      <div class="kpi-label">Cirurgias programadas</div>
+      <div class="kpi-value" id="kpiCirTot">55</div>
+      <div class="kpi-sub">unidades 14 e 20</div>
+    </div>
+    <div class="kpi" style="--accent:var(--lime)">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-label">Cirurgias realizadas</div>
+      <div class="kpi-value" id="kpiCirRzda">28</div>
+      <div class="kpi-sub" id="kpiCirPct">—% do programado</div>
+    </div>
+  </div>
+
+  <!-- ══ INTERNAÇÃO ══ -->
+  <div>
+    <div class="mod-header">
+      <div class="mod-header-bar" style="background:var(--blue)"></div>
+      <div>
+        <div class="mod-header-title">Internação</div>
+        <div class="mod-header-sub">Pacientes atualmente internados · todas as unidades</div>
+      </div>
+    </div>
+
+    <div class="row3">
+      <div class="card" style="grid-column:span 2">
+        <div class="card-header"><div class="section-title" style="--accent:var(--blue);margin:0">Por unidade funcional</div></div>
+        <div class="card-body"><div class="hbar-list" id="intUnidBars"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="section-title" style="--accent:var(--red);margin:0">Maior tempo internado</div></div>
+        <div class="card-body">
+          <div class="big-stat">
+            <div class="big-stat-num" id="bigTempo">671</div>
+            <div class="big-stat-unit">dias internado</div>
+            <div class="big-stat-detail" id="bigTempoDetail">Internado em 17/06/2024 08:30</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row2" style="margin-top:16px">
+      <div class="card">
+        <div class="card-header"><div class="section-title" style="--accent:var(--blue);margin:0">Por sexo</div></div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chartIntSexo"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="section-title" style="--accent:var(--blue);margin:0">Por faixa etária</div></div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chartIntIdade"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AMBULATÓRIO ══ -->
+  <div>
+    <div class="mod-header">
+      <div class="mod-header-bar" style="background:var(--yellow)"></div>
+      <div>
+        <div class="mod-header-title">Ambulatório — AMB ESP</div>
+        <div class="mod-header-sub">Consultas agendadas para hoje</div>
+      </div>
+    </div>
+
+    <!-- KPIs ambulatório -->
+    <div class="row4" style="margin-bottom:16px">
+      <div class="kpi" style="--accent:var(--yellow)">
+        <div class="kpi-icon">📋</div>
+        <div class="kpi-label">Agendados</div>
+        <div class="kpi-value" id="ambAgKpi">481</div>
+        <div class="kpi-sub" id="ambAgSexo">— masc · — fem</div>
+      </div>
+      <div class="kpi" style="--accent:var(--red)">
+        <div class="kpi-icon">🚫</div>
+        <div class="kpi-label">Faltaram</div>
+        <div class="kpi-value" id="ambFaltKpi">87</div>
+        <div class="kpi-sub" id="ambFaltPct">—% dos agendados</div>
+      </div>
+      <div class="kpi" style="--accent:var(--orange)">
+        <div class="kpi-icon">⏳</div>
+        <div class="kpi-label">Aguardando médico</div>
+        <div class="kpi-value" id="ambAguardKpi">23</div>
+        <div class="kpi-sub" id="ambAguardSexo">— masc · — fem</div>
+      </div>
+      <div class="kpi" style="--accent:var(--lime)">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-label">Especialidades ativas</div>
+        <div class="kpi-value" id="ambEspKpi">0</div>
+        <div class="kpi-sub">na agenda de hoje</div>
+      </div>
+    </div>
+
+    <div class="row3">
+      <div class="card">
+        <div class="card-header"><div class="section-title" style="--accent:var(--yellow);margin:0">Agendados por sexo</div></div>
+        <div class="card-body"><div class="chart-wrap-sm"><canvas id="chartAmbSexo"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="section-title" style="--accent:var(--yellow);margin:0">Agendados por faixa etária</div></div>
+        <div class="card-body"><div class="chart-wrap-sm"><canvas id="chartAmbIdade"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="section-title" style="--accent:var(--red);margin:0">Faltaram por sexo</div></div>
+        <div class="card-body"><div class="chart-wrap-sm"><canvas id="chartAmbFalt"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="card-header"><div class="section-title" style="--accent:var(--yellow);margin:0">Agendados por especialidade · aguardando / faltaram</div></div>
+      <div class="card-body" style="padding:0;overflow-x:auto">
+        <table class="dash-table" id="ambEspTable"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CENTRO CIRÚRGICO ══ -->
+  <div>
+    <div class="mod-header">
+      <div class="mod-header-bar" style="background:var(--teal)"></div>
+      <div>
+        <div class="mod-header-title">Centro Cirúrgico — programação do dia</div>
+        <div class="mod-header-sub">Totais consolidados · detalhamento separado por unidade</div>
+      </div>
+    </div>
+
+    <!-- KPIs CC consolidados -->
+    <div id="sitCards" class="row4" style="margin-bottom:16px"></div>
+
+    <!-- Detalhamento por unidade -->
+    <div class="row2" id="ccUnidades"></div>
+  </div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DADOS — substitua com os valores exportados do DBeaver
+// ══════════════════════════════════════════════════════════════════
+
+// ── Q7: Internação ────────────────────────────────────────────────
+const INT = {
+  total: 205,
+  masc: 112, fem: 93,
+  maiorDias: 671, maiorData: '17/06/2024 08:30',
+  unidades: [
+    { nome:'Clínica Médica',      n: 78 },
+    { nome:'Cirurgia Geral',      n: 45 },
+    { nome:'UTI Adulto',          n: 32 },
+    { nome:'Pediatria',           n: 22 },
+    { nome:'Ortopedia e Trauma',  n: 18 },
+    { nome:'Outras unidades',     n: 10 },
+  ],
+  faixas: [
+    { f:'0-17', n:22 }, { f:'18-39', n:38 },
+    { f:'40-59', n:67 }, { f:'60-74', n:54 }, { f:'75+', n:24 },
+  ],
+};
+
+// ── Q5: Ambulatório ───────────────────────────────────────────────
+const AMB = {
+  agendados: 481,  agendMasc: 225, agendFem: 256,
+  faltaram: 87,    faltMasc: 40,   faltFem: 47,
+  aguardando: 23,  aguardMasc: 10, aguardFem: 13,
+  agendFaixas: [
+    { f:'0-17', n:42 }, { f:'18-39', n:148 },
+    { f:'40-59', n:162 }, { f:'60-74', n:89 }, { f:'75+', n:40 },
+  ],
+  especialidades: [
+    { esp:'CLÍNICA MÉDICA',         total:98,  aguard:5, falt:18 },
+    { esp:'PEDIATRIA',              total:72,  aguard:3, falt:14 },
+    { esp:'GINECOLOGIA',            total:65,  aguard:4, falt:11 },
+    { esp:'ORTOPEDIA',              total:58,  aguard:2, falt:10 },
+    { esp:'CARDIOLOGIA',            total:47,  aguard:3, falt:9  },
+    { esp:'NEUROLOGIA',             total:38,  aguard:1, falt:7  },
+    { esp:'DERMATOLOGIA',           total:34,  aguard:2, falt:6  },
+    { esp:'ENDOCRINOLOGIA',         total:28,  aguard:1, falt:5  },
+    { esp:'OFTALMOLOGIA',           total:24,  aguard:2, falt:4  },
+    { esp:'OUTRAS',                 total:17,  aguard:0, falt:3  },
+  ],
+};
+
+// ── Q8: Centro Cirúrgico — dados separados por unidade ────────────
+const CC_UNIDADES = [
+  {
+    seq: 14,
+    nome: 'CC — Bloco Cirúrgico',
+    cor: '#0d9488',
+    situacao: [
+      { cod:'AGND', label:'Agendada',        n:8  },
+      { cod:'CHAM', label:'Chamado',         n:2  },
+      { cod:'PREP', label:'Em Preparo',      n:1  },
+      { cod:'TRAN', label:'Transoperatório', n:3  },
+      { cod:'RZDA', label:'Realizada',       n:20 },
+      { cod:'CANC', label:'Cancelada',       n:4  },
+    ],
+    natureza: [
+      { nat:'Eletiva',n:26 }, { nat:'Urgência',n:8 },
+      { nat:'Emergência',n:3 }, { nat:'Aproveit. Sala',n:1 },
+    ],
+    especialidades: [
+      { esp:'CG — Cirurgia Geral',     n:12 },
+      { esp:'ORT — Ortopedia',         n:8  },
+      { esp:'VAS — Cirurgia Vascular', n:4  },
+      { esp:'NEU — Neurocirurgia',     n:2  },
+      { esp:'GIN — Ginecologia',       n:2  },
+      { esp:'OFT — Oftalmologia',      n:2  },
+      { esp:'URO — Urologia',          n:8  },
+    ],
+    procedimentos: [
+      { proc:'Colecistectomia Videolaparoscópica', n:5 },
+      { proc:'Osteossíntese de Fêmur',             n:4 },
+      { proc:'Apendicectomia',                     n:4 },
+      { proc:'Herniorrafia Inguinal',              n:3 },
+      { proc:'Laparotomia Exploradora',            n:2 },
+      { proc:'Safenectomia',                       n:2 },
+      { proc:'Amputação Transtibial',              n:2 },
+      { proc:'Tireoidectomia',                     n:2 },
+      { proc:'Nefrectomia',                        n:1 },
+      { proc:'Laminectomia',                       n:1 },
+    ],
+    cancelamentos: [
+      { motivo:'Falta de material',         n:2 },
+      { motivo:'Intercorrência clínica',    n:1 },
+      { motivo:'Motivo não informado',      n:1 },
+    ],
+  },
+  {
+    seq: 20,
+    nome: 'CC — Ambulatório Cirúrgico',
+    cor: '#7c3aed',
+    situacao: [
+      { cod:'AGND', label:'Agendada',        n:4 },
+      { cod:'CHAM', label:'Chamado',         n:1 },
+      { cod:'PREP', label:'Em Preparo',      n:1 },
+      { cod:'TRAN', label:'Transoperatório', n:1 },
+      { cod:'RZDA', label:'Realizada',       n:8 },
+      { cod:'CANC', label:'Cancelada',       n:2 },
+    ],
+    natureza: [
+      { nat:'Eletiva',n:12 }, { nat:'Urgência',n:3 },
+      { nat:'Emergência',n:1 }, { nat:'Aproveit. Sala',n:1 },
+    ],
+    especialidades: [
+      { esp:'GIN — Ginecologia',   n:6 },
+      { esp:'ORT — Ortopedia',     n:4 },
+      { esp:'URO — Urologia',      n:3 },
+      { esp:'CG — Cirurgia Geral', n:4 },
+    ],
+    procedimentos: [
+      { proc:'Artroscopia de Joelho',   n:4 },
+      { proc:'Histerectomia',           n:3 },
+      { proc:'Herniorrafia Inguinal',   n:2 },
+      { proc:'Adenoidectomia',          n:2 },
+      { proc:'Vasectomia',              n:2 },
+      { proc:'Exérese de Tumor Cutâneo',n:1 },
+      { proc:'Postectomia',             n:1 },
+      { proc:'Biópsia Excisional',      n:1 },
+      { proc:'Fistulectomia Anal',      n:1 },
+      { proc:'Redução de Fratura',      n:0 },
+    ],
+    cancelamentos: [
+      { motivo:'Paciente não compareceu', n:2 },
+    ],
+  },
+];
+
+// ══════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════
+const BRAND  = ['#2B97D1','#E85A2A','#8CC63F','#F4C400','#0d9488','#7c3aed','#f97316','#06b6d4'];
+const BRAND2 = ['#3b82f6','#f97316','#22c55e','#f59e0b','#a855f7','#ef4444','#0d9488','#6366f1'];
+
+function sitColor(c){ return{AGND:'#3b82f6',CHAM:'#f59e0b',PREP:'#f97316',TRAN:'#a855f7',RZDA:'#22c55e',CANC:'#ef4444'}[c]||'#9ca3af'; }
+function hbars(data, labelKey, valKey, colors, maxOverride){
+  const max = maxOverride || Math.max(...data.map(x=>x[valKey]), 1);
+  return data.map((x,i)=>`
+    <div class="hbar-row">
+      <div class="hbar-label" title="${x[labelKey]}">${x[labelKey]}</div>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${Math.max(x[valKey]/max*100,2)}%;background:${colors[i%colors.length]}">${x[valKey]}</div>
+      </div>
+      <div class="hbar-val">${x[valKey]}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════════════════════════
+function tick(){
+  const n=new Date();
+  document.getElementById('clock').textContent=n.toLocaleTimeString('pt-BR');
+  document.getElementById('dateLabel').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+}
+tick(); setInterval(tick,1000);
+
+// ══════════════════════════════════════════════════════════════════
+// KPI GLOBAL
+// ══════════════════════════════════════════════════════════════════
+const cirTotal = CC_UNIDADES.flatMap(u=>u.situacao).reduce((s,x)=>s+x.n,0);
+const cirRzda  = CC_UNIDADES.flatMap(u=>u.situacao).filter(x=>x.cod==='RZDA').reduce((s,x)=>s+x.n,0);
+
+document.getElementById('kpiInt').textContent     = INT.total;
+document.getElementById('kpiIntSexo').textContent = `${INT.masc} masc · ${INT.fem} fem`;
+document.getElementById('kpiMaior').textContent   = INT.maiorDias;
+document.getElementById('kpiMaiorData').textContent = INT.maiorData.split(' ')[0];
+document.getElementById('kpiAmbAg').textContent   = AMB.agendados;
+document.getElementById('kpiAmbFalt').textContent = `${AMB.faltaram} faltaram (${Math.round(AMB.faltaram/AMB.agendados*100)}%)`;
+document.getElementById('kpiCirTot').textContent  = cirTotal;
+document.getElementById('kpiCirRzda').textContent = cirRzda;
+document.getElementById('kpiCirPct').textContent  = `${Math.round(cirRzda/cirTotal*100)}% do programado`;
+
+// ══════════════════════════════════════════════════════════════════
+// INTERNAÇÃO
+// ══════════════════════════════════════════════════════════════════
+document.getElementById('bigTempo').textContent       = INT.maiorDias;
+document.getElementById('bigTempoDetail').textContent = `Internado em ${INT.maiorData}`;
+
+document.getElementById('intUnidBars').innerHTML = hbars(INT.unidades,'nome','n',BRAND);
+
+new Chart(document.getElementById('chartIntSexo'),{
+  type:'doughnut',
+  data:{labels:['Masculino','Feminino'],datasets:[{data:[INT.masc,INT.fem],backgroundColor:['#2B97D1','#E85A2A'],borderColor:'#fff',borderWidth:3,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+    plugins:{legend:{position:'bottom',labels:{color:'#6b7280',padding:10,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>` ${c.raw} (${Math.round(c.raw/INT.total*100)}%)`}}}}
+});
+new Chart(document.getElementById('chartIntIdade'),{
+  type:'bar',
+  data:{labels:INT.faixas.map(x=>x.f),datasets:[{data:INT.faixas.map(x=>x.n),backgroundColor:BRAND,borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw} pacientes`}}},
+    scales:{x:{ticks:{color:'#6b7280'},grid:{color:'#f0f0f0'}},y:{ticks:{color:'#6b7280'},grid:{color:'#f0f0f0'}}}}
+});
+
+// ══════════════════════════════════════════════════════════════════
+// AMBULATÓRIO
+// ══════════════════════════════════════════════════════════════════
+document.getElementById('ambAgKpi').textContent    = AMB.agendados;
+document.getElementById('ambAgSexo').textContent   = `${AMB.agendMasc} masc · ${AMB.agendFem} fem`;
+document.getElementById('ambFaltKpi').textContent  = AMB.faltaram;
+document.getElementById('ambFaltPct').textContent  = `${Math.round(AMB.faltaram/AMB.agendados*100)}% dos agendados`;
+document.getElementById('ambAguardKpi').textContent= AMB.aguardando;
+document.getElementById('ambAguardSexo').textContent=`${AMB.aguardMasc} masc · ${AMB.aguardFem} fem`;
+document.getElementById('ambEspKpi').textContent   = AMB.especialidades.length;
+
+new Chart(document.getElementById('chartAmbSexo'),{
+  type:'doughnut',
+  data:{labels:['Masculino','Feminino'],datasets:[{data:[AMB.agendMasc,AMB.agendFem],backgroundColor:['#2B97D1','#E85A2A'],borderColor:'#fff',borderWidth:3,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+    plugins:{legend:{position:'bottom',labels:{color:'#6b7280',padding:8,font:{size:10}}},
+      tooltip:{callbacks:{label:c=>` ${c.raw} (${Math.round(c.raw/AMB.agendados*100)}%)`}}}}
+});
+new Chart(document.getElementById('chartAmbIdade'),{
+  type:'bar',
+  data:{labels:AMB.agendFaixas.map(x=>x.f),datasets:[{data:AMB.agendFaixas.map(x=>x.n),backgroundColor:BRAND,borderRadius:5,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{color:'#6b7280'},grid:{color:'#f0f0f0'}},y:{ticks:{color:'#6b7280'},grid:{color:'#f0f0f0'}}}}
+});
+new Chart(document.getElementById('chartAmbFalt'),{
+  type:'doughnut',
+  data:{labels:['Masculino','Feminino'],datasets:[{data:[AMB.faltMasc,AMB.faltFem],backgroundColor:['#f97316','#ef4444'],borderColor:'#fff',borderWidth:3,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+    plugins:{legend:{position:'bottom',labels:{color:'#6b7280',padding:8,font:{size:10}}},
+      tooltip:{callbacks:{label:c=>` ${c.raw} (${Math.round(c.raw/AMB.faltaram*100)}%)`}}}}
+});
+
+document.getElementById('ambEspTable').innerHTML = `
+  <thead><tr><th>Especialidade</th><th style="text-align:right">Agendados</th><th style="text-align:right">Aguardando</th><th style="text-align:right">Faltaram</th></tr></thead>
+  <tbody>${AMB.especialidades.map(r=>`
+    <tr>
+      <td style="font-weight:500">${r.esp}</td>
+      <td class="num-cell">${r.total}</td>
+      <td class="num-cell" style="color:var(--orange)">${r.aguard}</td>
+      <td class="num-cell" style="color:var(--red)">${r.falt}</td>
+    </tr>`).join('')}
+  </tbody>`;
+
+// ══════════════════════════════════════════════════════════════════
+// CENTRO CIRÚRGICO — KPIs consolidados
+// ══════════════════════════════════════════════════════════════════
+const sitTotals = {};
+CC_UNIDADES.forEach(u=>u.situacao.forEach(s=>{ sitTotals[s.cod]=(sitTotals[s.cod]||{label:s.label,cod:s.cod,n:0}); sitTotals[s.cod].n+=s.n; }));
+const sitOrder = ['AGND','CHAM','PREP','TRAN','RZDA','CANC'];
+const sitIcons = {AGND:'📅',CHAM:'📢',PREP:'⚙️',TRAN:'🔬',RZDA:'✅',CANC:'❌'};
+
+document.getElementById('sitCards').innerHTML = sitOrder.map(cod=>{
+  const s=sitTotals[cod]; if(!s) return '';
+  return `<div class="kpi" style="--accent:${sitColor(cod)}">
+    <div class="kpi-icon">${sitIcons[cod]||'•'}</div>
+    <div class="kpi-label">${s.label}</div>
+    <div class="kpi-value" style="font-size:24px">${s.n}</div>
+    <div class="kpi-sub">${Math.round(s.n/cirTotal*100)}% do total</div>
+  </div>`;
+}).join('');
+
+// ══════════════════════════════════════════════════════════════════
+// CENTRO CIRÚRGICO — detalhamento por unidade
+// ══════════════════════════════════════════════════════════════════
+document.getElementById('ccUnidades').innerHTML = CC_UNIDADES.map((u,ui)=>{
+  const uTotal = u.situacao.reduce((s,x)=>s+x.n,0);
+  const uRzda  = u.situacao.find(x=>x.cod==='RZDA')?.n||0;
+  const uCanc  = u.situacao.find(x=>x.cod==='CANC')?.n||0;
+  const natColors = ['#2B97D1','#f97316','#ef4444','#0d9488','#7c3aed'];
+  const espColors = ui===0 ? BRAND : BRAND2;
+
+  return `
+  <div class="unit-panel" style="--accent:${u.cor}">
+    <div class="unit-panel-header">
+      <div class="unit-panel-title">Unidade ${u.seq} — ${u.nome}</div>
+      <div class="unit-panel-sub">${uTotal} cirurgias · ${uRzda} realizadas · ${uCanc} canceladas</div>
+    </div>
+    <div class="unit-panel-body">
+
+      <!-- Situação badges -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${u.situacao.map(s=>`
+          <span class="sit-badge s-${s.cod}">
+            <span class="sit-dot"></span>${s.label}: ${s.n}
+          </span>`).join('')}
+      </div>
+
+      <!-- Natureza + especialidades -->
+      <div class="row2" style="gap:12px">
+        <div>
+          <div class="section-title" style="--accent:${u.cor};margin-bottom:8px">Por natureza</div>
+          <div class="hbar-list">${hbars(u.natureza,'nat','n',natColors)}</div>
+        </div>
+        <div>
+          <div class="section-title" style="--accent:${u.cor};margin-bottom:8px">Por especialidade</div>
+          <div class="hbar-list">${hbars(u.especialidades,'esp','n',espColors)}</div>
+        </div>
+      </div>
+
+      <!-- Top procedimentos -->
+      <div>
+        <div class="section-title" style="--accent:${u.cor};margin-bottom:8px">Top procedimentos</div>
+        <div class="hbar-list">${u.procedimentos.filter(x=>x.n>0).slice(0,8).map((x,i)=>`
+          <div class="hbar-row">
+            <div class="hbar-label" title="${x.proc}" style="width:200px">${i+1}. ${x.proc}</div>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width:${Math.max(x.n/u.procedimentos[0].n*100,4)}%;background:${u.cor}">${x.n}</div>
+            </div>
+            <div class="hbar-val">${x.n}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Cancelamentos -->
+      <div>
+        <div class="section-title" style="--accent:#ef4444;margin-bottom:8px">Desmarcadas por motivo</div>
+        <table class="dash-table">
+          <thead><tr><th>Motivo</th><th style="text-align:right">Qtd</th></tr></thead>
+          <tbody>${u.cancelamentos.map(r=>`
+            <tr>
+              <td>${r.motivo}</td>
+              <td class="num-cell" style="color:var(--red)">${r.n}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>`;
+}).join('');
+
+</script>
+</body>
+</html>

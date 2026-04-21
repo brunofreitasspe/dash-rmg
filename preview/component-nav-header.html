@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+  body { margin: 0; padding: 0; font-family: "Segoe UI", system-ui, sans-serif; background: hsl(220 25% 95%); }
+  header { background: white; border-bottom: 1px solid hsl(220 18% 89%); box-shadow: 0 1px 4px hsl(222 25% 16%/0.08); }
+  .inner { max-width: 1440px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-box { width: 56px; height: 56px; border: 1px solid hsl(220 18% 89%); border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+  .title { font-size: 15px; font-weight: 700; color: hsl(222 25% 16%); }
+  .subtitle { font-size: 11px; color: hsl(220 10% 45%); margin-top: 3px; }
+  .right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  nav { background: hsl(210 28% 97%); border: 1px solid hsl(220 18% 89%); border-radius: 8px; padding: 4px; display: flex; gap: 2px; }
+
+  .nav-item { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; display: flex; align-items: center; gap: 5px; background: transparent; color: hsl(220 10% 45%); transition: all 0.15s; white-space: nowrap; }
+  .nav-item:hover { color: hsl(222 25% 16%); }
+  .nav-item.active { background: hsl(200 65% 50%); color: white; }
+
+  /* dropdown nav item */
+  .nav-dropdown { position: relative; }
+  .nav-dropdown .nav-item { padding-right: 8px; }
+  .chevron { font-size: 9px; opacity: 0.7; }
+  .dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: white; border: 1px solid hsl(220 18% 89%); border-radius: 8px; box-shadow: 0 4px 16px hsl(222 25% 16%/0.12); min-width: 200px; padding: 4px; z-index: 100; }
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown.open .dropdown-menu { display: block; }
+  .dropdown-item { padding: 7px 12px; font-size: 11px; font-weight: 600; border-radius: 6px; cursor: pointer; color: hsl(222 25% 16%); display: flex; align-items: center; gap: 8px; transition: background 0.1s; }
+  .dropdown-item:hover { background: hsl(210 28% 97%); }
+  .dropdown-item .unit-badge { font-size: 9px; border-radius: 9999px; padding: 1px 6px; font-weight: 700; color: white; }
+  .dropdown-sep { height: 1px; background: hsl(220 18% 89%); margin: 3px 4px; }
+
+  .clock-widget { background: white; border: 1px solid hsl(220 18% 89%); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; position: relative; overflow: hidden; box-shadow: 0 1px 4px hsl(222 25% 16%/0.06); }
+  .clock-bg { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent, transparent 40px, hsl(0 0% 100%/0.06) 40px, hsl(0 0% 100%/0.06) 41px); }
+  .clock-icon { width: 36px; height: 36px; border-radius: 8px; background: hsl(200 65% 50%/12%); display: flex; align-items: center; justify-content: center; color: hsl(200 65% 50%); font-size: 18px; position: relative; }
+  .clock-time { font-size: 22px; font-weight: 800; color: hsl(200 65% 50%); line-height: 1; position: relative; }
+  .clock-date { font-size: 10px; color: hsl(220 10% 45%); margin-top: 3px; position: relative; }
+</style></head><body>
+<header>
+  <div class="inner">
+    <div class="logo-area">
+      <div class="logo-box"><img src="../assets/logo.png" alt="RMG"></div>
+      <div>
+        <div class="title">Produção das unidades — Rede Mário Gatti</div>
+        <div class="subtitle">Unidades hospitalares e UPAs — Campinas/SP</div>
+      </div>
+    </div>
+    <div class="right">
+      <nav>
+        <!-- Item 1: static page -->
+        <button class="nav-item active">⚕ Pronto Atendimentos e UPAs</button>
+
+        <!-- Item 2: Detalhamento Urgência — dropdown de unidades -->
+        <div class="nav-dropdown" id="dd-urgencia">
+          <button class="nav-item" onclick="toggleDD('dd-urgencia')">
+            ⚡ Detalhamento Urgência <span class="chevron">▾</span>
+          </button>
+          <div class="dropdown-menu">
+            <div style="padding:6px 12px 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:hsl(220 10% 45%)">Selecionar unidade</div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(17 80% 54%)">UPA</span> UPA Anchieta</div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(17 80% 54%)">UPA</span> UPA Campo Grande</div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(17 80% 54%)">UPA</span> UPA São José</div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(17 80% 54%)">UPA</span> UPA Carlos Lourenço</div>
+            <div class="dropdown-sep"></div>
+            <div style="padding:4px 12px 2px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:hsl(220 10% 45%)">Prontos-Socorros</div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(262 60% 55%)">PS</span> PS do CHPEO</div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(262 60% 55%)">PS</span> PS do HMMG</div>
+            <div class="dropdown-item"><span class="unit-badge" style="background:hsl(262 60% 55%)">PS</span> PS do UPMG</div>
+          </div>
+        </div>
+
+        <!-- Item 3: Detalhamento Hospitais — dropdown de unidades -->
+        <div class="nav-dropdown" id="dd-hospitais">
+          <button class="nav-item" onclick="toggleDD('dd-hospitais')">
+            🏥 Detalhamento Hospitais <span class="chevron">▾</span>
+          </button>
+          <div class="dropdown-menu">
+            <div style="padding:6px 12px 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:hsl(220 10% 45%)">Selecionar unidade</div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item" onclick="window.open('HospitalDetail.html','_blank')"><span class="unit-badge" style="background:hsl(122 47% 42%)">Hosp.</span> Hospital Mário Gatti</div>
+            <div class="dropdown-item" onclick="window.open('HospitalDetail.html','_blank')"><span class="unit-badge" style="background:hsl(122 47% 42%)">Hosp.</span> Mário Gattinho</div>
+            <div class="dropdown-item" onclick="window.open('HospitalDetail.html','_blank')"><span class="unit-badge" style="background:hsl(122 47% 42%)">Hosp.</span> Hosp. Edivaldo Orsi</div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="clock-widget">
+        <div class="clock-bg"></div>
+        <div class="clock-icon">🕐</div>
+        <div>
+          <div class="clock-time" id="time">--:--:--</div>
+          <div class="clock-date" id="date">carregando...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+function tick(){
+  const n=new Date();
+  document.getElementById('time').textContent=n.toLocaleTimeString('pt-BR');
+  document.getElementById('date').textContent=n.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+}
+tick(); setInterval(tick,1000);
+
+function toggleDD(id) {
+  const el = document.getElementById(id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+</script>
+</body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+  body { margin: 0; padding: 16px; font-family: "Segoe UI", system-ui, sans-serif; background: hsl(220 25% 95%); }
+  .section { margin-bottom: 14px; }
+  .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: hsl(220 10% 45%); margin-bottom: 8px; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .bar { background: hsl(200 65% 50%); border-radius: 3px; height: 20px; }
+  .label { font-size: 11px; color: hsl(222 25% 16%); min-width: 40px; }
+  .px { font-size: 10px; color: hsl(220 10% 45%); font-family: monospace; }
+  /* radius */
+  .rbox { display: flex; gap: 10px; flex-wrap: wrap; }
+  .r { width: 44px; height: 44px; background: hsl(200 65% 50%/20%); border: 1.5px solid hsl(200 65% 50%); display: flex; align-items: center; justify-content: center; font-size: 10px; color: hsl(200 65% 40%); font-weight: 700; }
+  /* shadow */
+  .sbox { background: white; border: 1px solid hsl(220 18% 89%); border-radius: 8px; padding: 10px 14px; font-size: 11px; color: hsl(222 25% 16%); display: inline-block; box-shadow: 0 1px 4px hsl(222 25% 16% / 0.08), 0 12px 30px hsl(222 25% 16% / 0.06); }
+</style></head><body>
+<div class="section">
+  <div class="section-label">Spacing scale (gap rhythm)</div>
+  <div class="row"><div class="label">gap-1</div><div class="bar" style="width:4px"></div><div class="px">4px</div></div>
+  <div class="row"><div class="label">gap-2</div><div class="bar" style="width:8px"></div><div class="px">8px</div></div>
+  <div class="row"><div class="label">gap-3</div><div class="bar" style="width:12px"></div><div class="px">12px</div></div>
+  <div class="row"><div class="label">gap-4</div><div class="bar" style="width:16px"></div><div class="px">16px — within sections</div></div>
+  <div class="row"><div class="label">gap-5</div><div class="bar" style="width:20px"></div><div class="px">20px — between sections</div></div>
+  <div class="row"><div class="label">gap-6</div><div class="bar" style="width:24px"></div><div class="px">24px — major sections</div></div>
+  <div class="row"><div class="label">gap-7</div><div class="bar" style="width:28px"></div><div class="px">28px — lg px edge</div></div>
+</div>
+<div class="section">
+  <div class="section-label">Border radius</div>
+  <div class="rbox">
+    <div class="r" style="border-radius:6px"><span>sm<br>6px</span></div>
+    <div class="r" style="border-radius:10px"><span>md<br>10px</span></div>
+    <div class="r" style="border-radius:12px"><span>lg<br>12px</span></div>
+    <div class="r" style="border-radius:9999px;width:60px"><span>full</span></div>
+  </div>
+</div>
+<div class="section" style="margin-top:12px">
+  <div class="section-label">Shadow — shadow-panel</div>
+  <div class="sbox">panel-surface element</div>
+</div>
+</body></html>

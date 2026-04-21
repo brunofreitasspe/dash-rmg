@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+  body { margin: 0; padding: 20px; font-family: "Segoe UI", system-ui, sans-serif; background: hsl(220 25% 95%); display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+  .variant { background: white; border: 1px solid hsl(220 18% 89%); border-radius: 10px; padding: 16px; text-align: center; }
+  .variant img { display: block; object-fit: contain; }
+  .variant-label { font-size: 10px; color: hsl(220 10% 45%); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px; }
+  .dark-bg { background: hsl(222 25% 16%); border-color: hsl(222 25% 22%); }
+  .dark-bg .variant-label { color: hsl(220 10% 65%); }
+  /* usage example */
+  .header-demo { background: white; border: 1px solid hsl(220 18% 89%); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .logo-box { width: 56px; height: 56px; border: 1px solid hsl(220 18% 89%); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+</style></head><body>
+<div class="variant">
+  <img src="../assets/logo.png" alt="RMG Logo" width="80" height="80">
+  <div class="variant-label">Light bg · 80×80</div>
+</div>
+<div class="variant dark-bg">
+  <img src="../assets/logo.png" alt="RMG Logo" width="80" height="80">
+  <div class="variant-label">Dark bg · 80×80</div>
+</div>
+<div class="header-demo">
+  <div class="logo-box"><img src="../assets/logo.png" alt="RMG" width="48" height="48" style="object-fit:contain"></div>
+  <div>
+    <div style="font-size:14px;font-weight:700;color:hsl(222 25% 16%)">Rede Mário Gatti</div>
+    <div style="font-size:11px;color:hsl(220 10% 45%);margin-top:2px">Campinas / SP — Painel Operacional</div>
+  </div>
+</div>
+</body></html>

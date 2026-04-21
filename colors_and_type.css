@@ -1,0 +1,121 @@
+/* =========================================================
+   Rede Mário Gatti — Design Tokens
+   Source: brunofreitasspe/dash-rmg (src/index.css, tailwind.config.ts)
+   All colors in HSL. Font: "Segoe UI", system-ui, sans-serif.
+   ========================================================= */
+
+:root {
+  /* ── Base Colors ── */
+  --color-background:       hsl(220 25% 95%);    /* page bg — cool light blue-gray */
+  --color-panel:            hsl(0 0% 100%);       /* card / panel surface — white */
+  --color-panel-fg:         hsl(222 25% 16%);     /* panel text — dark navy */
+  --color-foreground:       hsl(222 25% 16%);     /* body text */
+  --color-secondary:        hsl(210 28% 97%);     /* muted surface — stat rows, headers */
+  --color-secondary-fg:     hsl(222 25% 16%);
+  --color-muted:            hsl(220 20% 96%);     /* muted background */
+  --color-muted-fg:         hsl(220 10% 45%);     /* secondary labels, timestamps */
+  --color-border:           hsl(220 18% 89%);     /* card borders, dividers */
+  --color-input:            hsl(220 18% 89%);
+  --color-ring:             hsl(200 65% 50%);     /* focus ring = primary */
+
+  /* ── Brand Colors ── */
+  --color-brand-blue:       hsl(200 65% 50%);    /* primary — active states, values */
+  --color-brand-yellow:     hsl(47 91% 49%);     /* Manchester AMARELO — awaiting triage */
+  --color-brand-lime:       hsl(122 47% 42%);    /* Hospital marker — Manchester VERDE */
+  --color-brand-orange:     hsl(17 80% 54%);     /* UPA marker — Manchester LARANJA */
+
+  /* ── Semantic Colors ── */
+  --color-primary:          hsl(200 65% 50%);
+  --color-primary-fg:       hsl(0 0% 100%);
+  --color-destructive:      hsl(0 84.2% 60.2%);
+  --color-destructive-fg:   hsl(210 40% 98%);
+
+  /* ── Card / Popover ── */
+  --color-card:             hsl(0 0% 100%);
+  --color-card-fg:          hsl(222 25% 16%);
+  --color-popover:          hsl(0 0% 100%);
+  --color-popover-fg:       hsl(222 25% 16%);
+
+  /* ── Sidebar ── */
+  --color-sidebar-bg:       hsl(0 0% 98%);
+  --color-sidebar-fg:       hsl(240 5.3% 26.1%);
+  --color-sidebar-border:   hsl(220 13% 91%);
+
+  /* ── Triage / Manchester Protocol ── */
+  --triage-amarelo:         hsl(47 91% 49%);
+  --triage-laranja:         hsl(17 80% 54%);
+  --triage-verde:           hsl(122 47% 42%);
+  --triage-azul:            hsl(200 65% 50%);
+
+  /* ── Spacing & Shape ── */
+  --radius:                 0.625rem;             /* 10px — all cards, inputs, icons */
+  --radius-sm:              calc(0.625rem - 4px); /* 6px */
+  --radius-lg:              calc(0.625rem + 2px); /* 12px — map popups */
+  --radius-full:            9999px;               /* badges */
+
+  /* ── Shadows ── */
+  --shadow-panel:           0 1px 4px hsl(222 25% 16% / 0.08),
+                            0 12px 30px hsl(222 25% 16% / 0.06);
+
+  /* ── Backgrounds ── */
+  --panel-grid:             repeating-linear-gradient(
+                              90deg,
+                              transparent,
+                              transparent 40px,
+                              hsl(0 0% 100% / 0.06) 40px,
+                              hsl(0 0% 100% / 0.06) 41px
+                            );
+
+  /* ── Typography ── */
+  --font-sans:              "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono:              "Cascadia Code", "Fira Code", ui-monospace, monospace;
+
+  /* Type scale */
+  --text-xs:                0.6875rem;  /* 11px — labels, badges, metadata */
+  --text-sm:                0.75rem;    /* 12px — body, table cells */
+  --text-base:              0.875rem;   /* 14px — card headers, body text */
+  --text-lg:                1rem;       /* 16px */
+  --text-xl:                1.125rem;   /* 18px — header title */
+  --text-2xl:               1.5rem;     /* 24px — clock display */
+  --text-3xl:               1.875rem;   /* 30px — KPI values */
+  --text-4xl:               2.25rem;    /* 36px — highlight stats */
+
+  /* Font weights */
+  --weight-regular:         400;
+  --weight-medium:          500;
+  --weight-semibold:        600;
+  --weight-bold:            700;
+  --weight-extrabold:       800;
+  --weight-black:           900;
+
+  /* Letter spacing */
+  --tracking-wide:          0.025em;   /* uppercase labels */
+  --tracking-wider:         0.05em;    /* section titles */
+}
+
+/* ── Semantic CSS classes ── */
+
+/* Headings */
+h1 { font-family: var(--font-sans); font-size: var(--text-xl); font-weight: var(--weight-bold); letter-spacing: 0; }
+h2 { font-family: var(--font-sans); font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: 0; }
+h3 { font-family: var(--font-sans); font-size: var(--text-base); font-weight: var(--weight-bold); letter-spacing: 0; }
+h4 { font-family: var(--font-sans); font-size: var(--text-sm); font-weight: var(--weight-bold); letter-spacing: 0; }
+
+/* Body */
+body { font-family: var(--font-sans); font-size: var(--text-base); color: var(--color-foreground); background: var(--color-background); }
+
+/* ── Utility classes ── */
+
+.kpi-value     { font-size: var(--text-3xl); font-weight: var(--weight-extrabold); line-height: 1; color: var(--color-foreground); }
+.kpi-label     { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--color-muted-fg); }
+.section-title { font-size: var(--text-xs); font-weight: var(--weight-bold); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--color-muted-fg); display: flex; align-items: center; gap: 0.5rem; }
+.card-title    { font-size: var(--text-base); font-weight: var(--weight-bold); color: var(--color-foreground); }
+.mono-id       { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-muted-fg); }
+
+.panel-surface {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-panel);
+  color: var(--color-panel-fg);
+}
