@@ -192,13 +192,21 @@ All colors MUST be HSL.
   .leaflet-tooltip.network-tooltip .leaflet-tooltip-content {
     display: block;
     margin: 0;
-    padding: 0.45rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 700;
+    padding: 0;
     line-height: 1;
     white-space: nowrap;
     border-radius: 10px;
+  }
+
+  .network-tooltip__label {
+    display: block;
+    padding: 0.45rem 0.75rem;
+    border-radius: 10px;
     box-shadow: var(--shadow-panel);
+    color: hsl(var(--primary-foreground));
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
   }
 
   .leaflet-tooltip.network-tooltip--hospital .leaflet-tooltip-content {
